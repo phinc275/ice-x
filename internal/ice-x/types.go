@@ -742,6 +742,7 @@ func (client *XClient) FetchLimits(ctx context.Context) {
 					}
 				}
 				endpoint.Status = XEndpointStatusOk
+				endpoint.ErrorReason = ""
 
 			case http.StatusForbidden:
 				endpoint.Status = XEndpointStatusForbidden
