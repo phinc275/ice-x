@@ -736,6 +736,7 @@ func (client *XClient) FetchLimits(ctx context.Context) {
 					for _, e := range respBody.Errors {
 						if e.Name == "AuthorizationError" {
 							endpoint.Status = XEndpointStatusForbidden
+							endpoint.ErrorReason = e.Message
 							return
 						}
 					}
@@ -744,6 +745,7 @@ func (client *XClient) FetchLimits(ctx context.Context) {
 
 			case http.StatusForbidden:
 				endpoint.Status = XEndpointStatusForbidden
+				endpoint.ErrorReason = "response status forbidden"
 				return
 
 			default:

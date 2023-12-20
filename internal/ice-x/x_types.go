@@ -124,6 +124,7 @@ func (manager *XManager) nextClient(endpointKey XEndpointKey) (*XClient, func(st
 		selectedEndpoint.Pending--
 		if statusCode == http.StatusUnauthorized || statusCode == http.StatusForbidden {
 			selectedEndpoint.Status = XEndpointStatusForbidden
+			selectedEndpoint.ErrorReason = "response code unauthorized or forbidden"
 			return
 		}
 
@@ -136,6 +137,7 @@ func (manager *XManager) nextClient(endpointKey XEndpointKey) (*XClient, func(st
 			for _, e := range respBody.Errors {
 				if e.Name == "AuthorizationError" {
 					selectedEndpoint.Status = XEndpointStatusForbidden
+					selectedEndpoint.ErrorReason = e.Message
 					return
 				}
 			}
