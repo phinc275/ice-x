@@ -1,0 +1,49 @@
+version: "3.8"
+
+services:
+  ice-x:
+    environment:
+      DB_HOST: 'postgres'
+      DB_PORT: ${DB_PORT}
+      DB_DATABASE: ${DB_DATABASE}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      AUTO_MIGRATE: ${AUTO_MIGRATE}
+    image: ice-x
+    env_file:
+      - .env
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - postgres
+    networks:
+      - ice-x
+    ports:
+      - "8087:8087"
+    restart: unless-stopped
+
+  postgres:
+    image: timescale/timescaledb:latest-pg14
+    shm_size: 4g
+    networks:
+      - ice-x
+    environment:
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_MULTIPLE_DATABASES: ${DB_DATABASE}
+      POSTGRES_PORT: ${DB_PORT}
+      PGDATA: /var/lib/postgresql/data
+    volumes:
+      - ./pgdata/production/data:/var/lib/postgresql/data
+      - ./config/postgres/initdb.d:/docker-entrypoint-initdb.d
+    restart: unless-stopped
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 1s
+      timeout: 2s
+      retries: 5
+
+networks:
+  ice-x:
+    name: "ice-x"

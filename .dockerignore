@@ -1,0 +1,6 @@
+.env*
+deployment/Dockerfile
+docker-compose*
+pgdata
+.gitignore
+.dockerignore

@@ -1,0 +1,9 @@
+psql:
+  uuid_pkg: google
+  output: "internal/ice-x/bob"
+  pkgname: "bob"
+  except:
+    goose_db_version:
+no_factory: true
+wipe: true
+tags: ["json"]
