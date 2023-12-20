@@ -94,6 +94,7 @@ func (manager *XManager) LoadFromCookies(ctx context.Context) error {
 				Endpoints:   nil,
 				ErrorReason: "",
 			}
+			continue
 		}
 
 		header := http.Header{}
