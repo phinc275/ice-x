@@ -149,6 +149,7 @@ func (manager *XManager) List(ctx context.Context) ([]XAccountDTO, error) {
 				HasEmailPassword:          client.Account.EmailPassword != "",
 				HasCookies:                client.Account.Cookies != "",
 				Status:                    client.Status,
+				ErrorReason:               client.ErrorReason,
 				AutoEmailConfirmationCode: client.Account.AutoEmailConfirmationCode,
 				Endpoints:                 endpoints,
 			}
@@ -474,6 +475,7 @@ type XAccountDTO struct {
 	HasEmailPassword          bool           `json:"has_email_password"`
 	HasCookies                bool           `json:"has_cookies"`
 	Status                    string         `json:"status"`
+	ErrorReason               string         `json:"error_reason"`
 	AutoEmailConfirmationCode bool           `json:"auto_email_confirmation_code"`
 	Endpoints                 []XEndpointDTO `json:"endpoints"`
 }
