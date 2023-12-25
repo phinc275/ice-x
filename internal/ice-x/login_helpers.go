@@ -139,7 +139,7 @@ func tryLogin(ctx context.Context, account *XAccount) *XClient {
 			}
 		}
 	} else if requireConfirmationCode {
-		if account.AutoEmailConfirmationCode || account.Email == "" || account.EmailPassword == "" || !strings.HasSuffix(account.Email, "@hotmail.com") {
+		if !account.AutoEmailConfirmationCode || account.Email == "" || account.EmailPassword == "" || !strings.HasSuffix(account.Email, "@hotmail.com") {
 			return &XClient{
 				Account:     account,
 				HttpClient:  nil,
