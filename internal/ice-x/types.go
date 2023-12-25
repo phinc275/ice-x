@@ -287,7 +287,15 @@ func (manager *XManager) Update(ctx context.Context, payload UpdateAccountPayloa
 	delete(manager.clients, payload.Username)
 	manager.rwMtx.Unlock()
 
-	updatedAccount, err := manager.ds.Update(ctx, &XAccountSetter{})
+	updatedAccount, err := manager.ds.Update(ctx, &XAccountSetter{
+		Username:                  omit.From(account.Username),
+		Password:                  payload.Password,
+		Email:                     payload.Email,
+		EmailPassword:             payload.EmailPassword,
+		UpdatedAt:                 omit.From(time.Now()),
+		Cookies:                   payload.Cookies,
+		AutoEmailConfirmationCode: payload.AutoEmailConfirmationCode,
+	})
 	if err != nil {
 		return err
 	}
