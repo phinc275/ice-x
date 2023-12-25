@@ -188,6 +188,7 @@ func initGuessToken(ctx context.Context, httpClient *http.Client) error {
 	if err != nil {
 		return err
 	}
+	req.Header.Set("User-Agent", "curl/8.5.0")
 	req = req.WithContext(ctx)
 
 	resp, err := httpClient.Do(req)
@@ -230,6 +231,7 @@ func initGuessToken2(ctx context.Context, httpClient *http.Client) error {
 		return err
 	}
 	req = req.WithContext(ctx)
+	req.Header.Set("User-Agent", "curl/8.5.0")
 	req.Header.Set("Content-Type", "x-www-form-urlencoded")
 	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", defaultBearerToken))
 
