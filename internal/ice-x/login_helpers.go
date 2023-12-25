@@ -142,7 +142,7 @@ func tryLogin(ctx context.Context, account *XAccount) *XClient {
 		if !account.AutoEmailConfirmationCode || account.Email == "" || account.EmailPassword == "" || !strings.HasSuffix(account.Email, "@hotmail.com") {
 			return &XClient{
 				Account:     account,
-				HttpClient:  nil,
+				HttpClient:  httpClient,
 				Status:      XClientStatusWaitingForConfirmationCode,
 				FlowToken:   flowToken,
 				ErrorReason: "",
