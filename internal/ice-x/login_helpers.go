@@ -123,7 +123,7 @@ func tryLogin(ctx context.Context, account *XAccount) *XClient {
 				HttpClient:  httpClient,
 				Status:      XClientStatusWaitingForEmail,
 				FlowToken:   flowToken,
-				ErrorReason: err.Error(),
+				ErrorReason: "",
 				Endpoints:   nil,
 			}
 		}
@@ -145,7 +145,7 @@ func tryLogin(ctx context.Context, account *XAccount) *XClient {
 				HttpClient:  nil,
 				Status:      XClientStatusWaitingForConfirmationCode,
 				FlowToken:   flowToken,
-				ErrorReason: err.Error(),
+				ErrorReason: "",
 				Endpoints:   nil,
 			}
 		}
