@@ -372,6 +372,7 @@ func (manager *XManager) DoFlow(ctx context.Context, payload DoFlowPayload) erro
 		client.Status = XClientStatusErrored
 		client.ErrorReason = err.Error()
 		client.FlowToken = ""
+		return nil
 	}
 
 	client.Endpoints = DefaultEndpoints()
