@@ -1,6 +1,8 @@
 package handler
 
 import (
+	"fmt"
+	"io"
 	"net/http"
 
 	"github.com/MicahParks/keyfunc"
@@ -79,6 +81,40 @@ func New(cfg *Config, manager ice_x.Manager) (http.Handler, error) {
 	xGroup.GET("/favoriters", group.Favoriters)
 	xGroup.GET("/followings", group.Followings)
 	xGroup.GET("/statuses", group.Statuses)
+
+	discordGroup := api.Group("/discord")
+	discordGroup.GET("/invite-details", func(c echo.Context) error {
+		inviteID := c.QueryParams().Get("id")
+
+		req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("https://discord.com/api/v9/invites/%s", inviteID), nil)
+		if err != nil {
+			c.Response().WriteHeader(http.StatusInternalServerError)
+			_, _ = c.Response().Write([]byte(err.Error()))
+			return err
+		}
+
+		httpClient := &http.Client{}
+		resp, err := httpClient.Do(req)
+		if err != nil {
+			c.Response().WriteHeader(http.StatusInternalServerError)
+			_, _ = c.Response().Write([]byte(err.Error()))
+			return err
+		}
+		defer func() { _ = resp.Body.Close() }()
+
+		respBz, err := io.ReadAll(resp.Body)
+		if err != nil {
+			c.Response().WriteHeader(http.StatusInternalServerError)
+			_, _ = c.Response().Write([]byte(err.Error()))
+			return err
+		}
+
+		c.Response().Header().Set("Content-Type", resp.Header.Get("Content-Type"))
+		c.Response().WriteHeader(resp.StatusCode)
+
+		_, _ = c.Response().Write(respBz)
+		return nil
+	})
 
 	return r, nil
 }
