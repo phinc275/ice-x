@@ -72,6 +72,7 @@ type StatusStat struct {
 	ReplyCount     int64     `json:"reply_count"`
 	RetweetCount   int64     `json:"retweet_count"`
 	FavoriteCount  int64     `json:"favorite_count"`
+	TweetUrl       string    `json:"tweet_url"`
 }
 
 func (manager *XManager) nextClient(endpointKey XEndpointKey) (*XClient, func(statusCode int, header http.Header, body []byte)) {
@@ -958,6 +959,14 @@ func (manager *XManager) StatusesByScreenName(ctx context.Context, screenName st
 			}
 
 			tweetResult := entry.Content.ItemContent.TweetResults.Result
+
+			var tweetUrl string
+
+			entryID := strings.Split(entry.EntryID, "-")
+			if len(entryID) > 1 {
+				tweetUrl = fmt.Sprintf("https://twitter.com/%s/status/%s", screenName, entryID[1])
+			}
+
 			statuses = append(statuses, StatusStat{
 				UserID:         tweetResult.Core.UserResults.Result.RestID,
 				UserScreenName: tweetResult.Core.UserResults.Result.Legacy.ScreenName,
@@ -970,6 +979,7 @@ func (manager *XManager) StatusesByScreenName(ctx context.Context, screenName st
 				QuoteCount:     tweetResult.Legacy.QuoteCount,
 				ReplyCount:     tweetResult.Legacy.ReplyCount,
 				RetweetCount:   tweetResult.Legacy.RetweetCount,
+				TweetUrl:       tweetUrl,
 			})
 		}
 	}
